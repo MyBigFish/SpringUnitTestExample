@@ -17,7 +17,6 @@ import com.fish.springunittestexample.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,12 +36,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author dayuqichengbao
  * @version 创建时间 2023/4/16 11:29
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserApiIntegrationTest extends AbstractIntegrationTest{
+
 
     @BeforeAll
     public static void start() {
-        mySQLContainer.start();
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
     }

@@ -18,11 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.MySQLContainer;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,7 +46,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
 
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -59,21 +55,10 @@ public class UserControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7")
-            .withDatabaseName("test")
-            .withUsername("root")
-            .withPassword("root")
-            .withReuse(true);
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.password", mySQLContainer::getPassword);
-        registry.add("spring.datasource.username", mySQLContainer::getUsername);
-    }
+
 
     @BeforeEach
     public void setUp() {
-        mySQLContainer.start();
         createObjectMapper();
     }
 
