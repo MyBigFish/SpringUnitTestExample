@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  ### MySQL Container
+  mysql:
+    image: mysql:5.7  # mysql数据库及版本
+    container_name: mysqldb # 容器名
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456 #root管理员用户密码
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d  # sql初始化目录

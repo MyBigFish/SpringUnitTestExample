@@ -70,8 +70,8 @@ public class UserApiIntegrationTest extends AbstractIntegrationTest{
         return "http://localhost:" + port + "/api/saveUser";
     }
 
-    private String getURLWithPort() {
-        return "http://localhost:" + port + "/api/users/100";
+    private String getURLWithPort(int id) {
+        return "http://localhost:" + port + "/api/users/" + id;
     }
 
     @Test
@@ -105,7 +105,7 @@ public class UserApiIntegrationTest extends AbstractIntegrationTest{
         ParameterizedTypeReference<Response<User>> reference = new ParameterizedTypeReference<Response<User>>() {
         };
         ResponseEntity<Response<User>> response = restTemplate.exchange(
-                getURLWithPort(), HttpMethod.GET,
+                getURLWithPort(100), HttpMethod.GET,
                 entity,
                 reference);
         Response<User> body = response.getBody();
