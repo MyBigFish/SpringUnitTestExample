@@ -45,16 +45,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMybatisPlus
 public class UserControllerTest {
 
-
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private UserService userService;
 
-
     private final ObjectMapper objectMapper = new ObjectMapper();
-
 
 
     @BeforeEach
@@ -62,50 +59,11 @@ public class UserControllerTest {
         createObjectMapper();
     }
 
-    private void createObjectMapper() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        Module timeModule = new JavaTimeModule()
-                .addDeserializer(LocalDate.class, new LocalDateDeserializer(dateFormatter))
-                .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(timeFormatter))
-                .addSerializer(LocalDate.class, new LocalDateSerializer(dateFormatter))
-                .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(timeFormatter));
-        objectMapper.registerModule(timeModule);
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-    }
-
-    @Test
-    public void testGetUsers() throws Exception {
-        User user = User.builder().nickname("test").isEnable(true).build();
-        when(userService.getUsers()).thenReturn(Collections.singletonList(user));
-        mockMvc.perform(get("/api/getUsers"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data", hasSize(1)))
-                .andExpect(jsonPath("$.data").isArray());
-    }
-
-    @Test
-    public void testGetUserById() throws Exception {
-        User user = new User();
-        user.setId(1L);
-        user.setNickname("Tom");
-        user.setIsDeleted(false);
-        user.setIsEnable(true);
-        user.setUpdateTime(LocalDateTime.now());
-        user.setCreateTime(LocalDateTime.now());
-        when(userService.getUserById(1L)).thenReturn(user);
-        mockMvc.perform(get("/api/users/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data.nickname", is("Tom")))
-                .andExpect(jsonPath("$.data.id", is(1)))
-                .andExpect(jsonPath("$").isNotEmpty());
-    }
-
-
+    /**
+     * 测试创建用户
+     * mock service 层数据
+     * @throws Exception 异常
+     */
     @Test
     public void testCreateUser() throws Exception {
         User user = new User();
@@ -129,6 +87,63 @@ public class UserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data.id", is(1)))
                 .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+    /**
+     * 测试用户列表
+     * mock service 层数据
+     *
+     * @throws Exception 异常
+     */
+    @Test
+    public void testGetUsers() throws Exception {
+        User user = User.builder().nickname("test").isEnable(true).build();
+        when(userService.getUsers()).thenReturn(Collections.singletonList(user));
+        mockMvc.perform(get("/api/getUsers"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data").isArray());
+    }
+
+    /**
+     * 测试得到用户id
+     *
+     * @throws Exception 异常
+     */
+    @Test
+    public void testGetUserById() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        user.setNickname("Tom");
+        user.setIsDeleted(false);
+        user.setIsEnable(true);
+        user.setUpdateTime(LocalDateTime.now());
+        user.setCreateTime(LocalDateTime.now());
+        when(userService.getUserById(1L)).thenReturn(user);
+        mockMvc.perform(get("/api/users/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.data.nickname", is("Tom")))
+                .andExpect(jsonPath("$.data.id", is(1)))
+                .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+
+
+
+    private void createObjectMapper() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Module timeModule = new JavaTimeModule()
+                .addDeserializer(LocalDate.class, new LocalDateDeserializer(dateFormatter))
+                .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(timeFormatter))
+                .addSerializer(LocalDate.class, new LocalDateSerializer(dateFormatter))
+                .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(timeFormatter));
+        objectMapper.registerModule(timeModule);
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
     }
 
 }

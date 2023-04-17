@@ -3,11 +3,9 @@ package com.fish.springunittestexample.service;
 import com.fish.springunittestexample.entity.User;
 import com.fish.springunittestexample.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
@@ -28,6 +26,10 @@ public class UserServiceTest {
     @Mock
     private UserMapper userMapper;
 
+    /**
+     * 测试得到用户列表
+     * 测试service逻辑
+     */
     @Test
     public void testGetUserList() {
         User user1 = new User(1L, "Tom", true, true);
@@ -40,21 +42,11 @@ public class UserServiceTest {
         assertEquals(userService.getUsers().get(1).getId(), 2L);
     }
 
-    @Test
-    public void testGetUserById() {
-        User user1 = new User(1L, "Tom", true, true);
-        when(userMapper.selectById(1L)).thenReturn(user1);
-        assertEquals(userService.getUserById(1L).getNickname(), "Tom");
-        assertEquals(userService.getUserById(1L).getId(), 1L);
-    }
-    @Test
-    public void testGetInvalidUserById() {
-        Long userId = 17L;
-        when(userMapper.selectById(userId)).thenReturn(null);
-        Exception exception = assertThrows(RuntimeException.class, () -> userService.getUserById(userId));
-        assertTrue(exception.getMessage().contains("user not exist"));
-    }
 
+    /**
+     * 测试添加用户
+     * 测试最终写入数据库的值是否符合预期
+     */
     @Test
     public void testAddUser() {
         User user = new User(null, "john", true, true);
@@ -70,4 +62,29 @@ public class UserServiceTest {
         verify(userMapper, times(1)).insert(any(User.class));
 
     }
+
+
+    /**
+     * 测试异常
+     * assertThrows 测试异常是否符合预期
+     */
+    @Test
+    public void testGetInvalidUserById() {
+        Long userId = 17L;
+        when(userMapper.selectById(userId)).thenReturn(null);
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.getUserById(userId));
+        assertTrue(exception.getMessage().contains("user not exist"));
+    }
+
+    @Test
+    public void testGetUserById() {
+        User user1 = new User(1L, "Tom", true, true);
+        when(userMapper.selectById(1L)).thenReturn(user1);
+        assertEquals(userService.getUserById(1L).getNickname(), "Tom");
+        assertEquals(userService.getUserById(1L).getId(), 1L);
+    }
+
+
+
+
 }
