@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 
@@ -15,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * @author shulongliu
+ * @author dayuqichengbao
  * @version 创建时间 2023/4/16 10:56
  */
-@ExtendWith(SpringExtension.class)
+@SpringJUnitConfig
 public class UserServiceTest {
 
     @InjectMocks

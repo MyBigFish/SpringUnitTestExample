@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 /**
  * 基础实体
  *
- * @author shulongliu
+ * @author dayuqichengbao
  * @date 2023/04/16
  */
 @Getter

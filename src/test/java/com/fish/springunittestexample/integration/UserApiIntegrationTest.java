@@ -34,11 +34,19 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * @author shulongliu
+ * @author dayuqichengbao
  * @version 创建时间 2023/4/16 11:29
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserApiIntegrationTest {
+public class UserApiIntegrationTest extends AbstractIntegrationTest{
+
+    @BeforeAll
+    public static void start() {
+        mySQLContainer.start();
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+
     @LocalServerPort
     private int port;
 
@@ -55,16 +63,8 @@ public class UserApiIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeAll
-    public static void init() {
-        headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
-
-
-    }
-
-    private String createURLWithPort() {
+    private String usersURLWithPort() {
         return "http://localhost:" + port + "/api/getUsers";
     }
 
@@ -86,7 +86,7 @@ public class UserApiIntegrationTest {
         ParameterizedTypeReference<Response<List<User>>> reference = new ParameterizedTypeReference<Response<List<User>>>() {
         };
         ResponseEntity<Response<List<User>>> response = restTemplate.exchange(
-                createURLWithPort(), HttpMethod.GET,
+                usersURLWithPort(), HttpMethod.GET,
                 entity,
                 reference);
         Response<List<User>> body = response.getBody();

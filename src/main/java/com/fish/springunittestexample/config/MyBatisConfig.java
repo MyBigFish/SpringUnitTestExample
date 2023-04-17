@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author shulongliu
+ * @author dayuqichengbao
  * @version 创建时间 2023/4/16 10:17
  */
 @Configuration

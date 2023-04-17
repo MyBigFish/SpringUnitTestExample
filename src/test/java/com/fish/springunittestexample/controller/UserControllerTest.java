@@ -14,13 +14,15 @@ import com.fish.springunittestexample.entity.User;
 import com.fish.springunittestexample.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.MySQLContainer;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,14 +39,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * 用户控制器测试
- * @author shulongliu
+ * @author dayuqichengbao
  * @version 创建时间 2023/4/16 09:45
  * @date 2023/04/16
  */
-@ExtendWith(SpringExtension.class)
+@SpringJUnitConfig
 @WebMvcTest(UserController.class)
 @AutoConfigureMybatisPlus
 public class UserControllerTest {
+
 
 
     @Autowired
@@ -53,14 +56,28 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    private User user;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    public static MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:5.7")
+            .withDatabaseName("test")
+            .withUsername("root")
+            .withPassword("root")
+            .withReuse(true);
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+    }
+
     @BeforeEach
     public void setUp() {
-        user = User.builder().nickname("test").isEnable(true).build();
+        mySQLContainer.start();
+        createObjectMapper();
+    }
 
+    private void createObjectMapper() {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Module timeModule = new JavaTimeModule()
@@ -70,12 +87,11 @@ public class UserControllerTest {
                 .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(timeFormatter));
         objectMapper.registerModule(timeModule);
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-//        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
     }
 
     @Test
     public void testGetUsers() throws Exception {
+        User user = User.builder().nickname("test").isEnable(true).build();
         when(userService.getUsers()).thenReturn(Collections.singletonList(user));
         mockMvc.perform(get("/api/getUsers"))
                 .andDo(print())
