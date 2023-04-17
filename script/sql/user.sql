@@ -1,5 +1,7 @@
 create database test;
 
+use test;
+
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE `user`
