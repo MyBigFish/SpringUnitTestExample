@@ -21,6 +21,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.annotation.Resource;
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author dayuqichengbao
  * @version 创建时间 2023/4/16 11:29
  */
+@ActiveProfiles(value = "test")
 public class UserApiIntegrationTest extends AbstractIntegrationTest{
 
 
