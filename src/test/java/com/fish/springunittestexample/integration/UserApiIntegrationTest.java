@@ -40,7 +40,7 @@ public class UserApiIntegrationTest extends AbstractIntegrationTest{
 
 
     @BeforeAll
-    public static void start() {
+    public static void setUp() {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
