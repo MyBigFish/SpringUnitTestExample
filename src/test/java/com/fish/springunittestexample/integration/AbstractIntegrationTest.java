@@ -19,8 +19,9 @@ public class AbstractIntegrationTest {
             .withDatabaseName("test")
             .withUsername("root")
             .withPassword("123456")
-            .withPrivilegedMode(false)
             .withReuse(true)
+            .withUrlParam("useSSL", "false")
+            .withUrlParam("useUnicode", "true")
             .withStartupTimeout(Duration.ofMinutes(1))
             .withInitScript("user.sql");
 

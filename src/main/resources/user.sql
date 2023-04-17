@@ -1,6 +1,7 @@
-drop database if exists test;
-
-create database test;
+-- 注意区别，container不需要初始数据库
+-- drop database if exists test;
+--
+-- create database test;
 
 use test;
 
